@@ -18,3 +18,4 @@ before_script:
 
 script:
   - php --ri swoole
+  - php test-swoole-process.php
