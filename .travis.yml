@@ -13,6 +13,7 @@ matrix:
 
 before_script:
   - pecl install swoole
+  - printf "\n" | pecl install imagick
   - phpenv config-add php-ext.ini
   - phpenv rehash
 
