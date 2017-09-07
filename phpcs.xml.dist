@@ -10,7 +10,6 @@
         <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
     </rule>
 
-    <file>*.php</file>
     <arg value="sp"/>
     <arg name="colors"/>
     <arg name="report-width" value="180"/>
