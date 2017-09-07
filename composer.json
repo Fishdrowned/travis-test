@@ -1,0 +1,20 @@
+{
+    "name": "Fishdrowned/travis-test",
+    "description": "Travis Test",
+    "keywords": ["travis"],
+    "type": "library",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "Christopher CHEN",
+            "email": "fishdrowned@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+    },
+    "require-dev": {
+        "squizlabs/php_codesniffer": "~3.0"
+    }
+}
