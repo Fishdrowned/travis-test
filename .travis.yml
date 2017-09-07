@@ -17,12 +17,13 @@ before_script:
 #  - pecl install swoole
 #  - printf "\n" | pecl install imagick
 #  - phpenv config-add php-ext.ini
+  - composer update
   - pear install pear/PHP_CodeSniffer
   - phpenv rehash
   - php -i|grep include_path
   - ls -la --color /home/travis/.phpenv/versions/$(phpenv version-name)/share/pear
 
 script:
-  - phpcs --extensions=php
+  - vendor/bin/phpcs --extensions=php ./
 #  - php --ri swoole
 #  - bash run-scripts
