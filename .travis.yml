@@ -17,8 +17,10 @@ before_script:
   - pecl install swoole
   - printf "\n" | pecl install imagick
   - phpenv config-add php-ext.ini
+  - pyrus install pear/PHP_CodeSniffer
   - phpenv rehash
 
 script:
+  - phpcs
   - php --ri swoole
   - bash run-scripts
