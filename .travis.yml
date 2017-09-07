@@ -23,6 +23,6 @@ before_script:
   - ls -la --color /home/travis/.phpenv/versions/$(phpenv version-name)/share/pear
 
 script:
-  - phpcs
+  - phpcs --extensions=php
 #  - php --ri swoole
 #  - bash run-scripts
