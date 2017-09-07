@@ -14,13 +14,13 @@ matrix:
     - php: '7.2'
 
 before_script:
-  - pecl install swoole
-  - printf "\n" | pecl install imagick
-  - phpenv config-add php-ext.ini
+#  - pecl install swoole
+#  - printf "\n" | pecl install imagick
+#  - phpenv config-add php-ext.ini
   - pear install pear/PHP_CodeSniffer
   - phpenv rehash
 
 script:
   - phpcs
-  - php --ri swoole
-  - bash run-scripts
+#  - php --ri swoole
+#  - bash run-scripts
