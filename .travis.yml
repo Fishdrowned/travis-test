@@ -13,6 +13,10 @@ matrix:
   allow_failures:
     - php: '7.2'
 
+cache:
+  directories:
+    - $HOME/pecl_cache
+
 before_script:
   - pecl channel-update pecl.php.net
 #  - pecl install swoole
