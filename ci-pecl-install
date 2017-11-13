@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+function error {
+    echo $1 >&2
+    exit 1
+}
+
+MODULE=$1
+SKIP_UPDATE=$2
+
+if [[ ! ${MODULE} ]]; then
+    error "Module name not specified"
+fi
+
+function getExtDir()
+{
+    php -r 'echo ini_get("extension_dir"), PHP_EOL;'
+}
+
+function getPhpVersion()
+{
+    if command -v phpenv; then
+        phpenv version-name
+        return 0
+    fi
+    php -r '$ver = explode(".", PHP_VERSION); echo $ver[0], ".", $ver[1], PHP_EOL;'
+}
+
+function applyLatestCachedSo()
+{
+    echo FOUND ${LATEST_SO}
+    echo NO NEED TO UPDATE ${MODULE}
+    cp "${LATEST_SO}" "${TARGET_SO}"
+    exit 0
+}
+
+PHP_VER=$(getPhpVersion)
+EXT_DIR=$(getExtDir)
+TARGET_SO=${EXT_DIR}/${MODULE}.so
+CACHE_DIR=${HOME}/pecl_cache/${PHP_VER}
+LATEST_SO=${CACHE_DIR}/${MODULE}.so
+CACHED_VER_FILE=${CACHE_DIR}/${MODULE}.ver
+
+mkdir -p ${CACHE_DIR}
+
+if [[ ${SKIP_UPDATE} && -f ${LATEST_SO} ]]; then
+    applyLatestCachedSo
+fi
+
+REMOTE_MODULE_VER_ARRAY=( $(pecl remote-info ${MODULE} | grep 'Latest') )
+REMOTE_MODULE_VER=${REMOTE_MODULE_VER_ARRAY[1]}
+
+if [[ -f ${CACHED_VER_FILE} ]]; then
+    CACHED_VER=$(cat ${CACHED_VER_FILE})
+    if [[ ${CACHED_VER} == ${REMOTE_MODULE_VER} ]]; then
+        applyLatestCachedSo
+    fi
+fi
+
+echo '>' pecl install ${MODULE}
+
+printf "\n" | pecl install ${MODULE} || error "Install failed"
+
+MODULE_VER_ARRAY=( $(pecl info ${MODULE} | grep 'Release Version') )
+MODULE_VER=${MODULE_VER_ARRAY[2]}
+cp "${TARGET_SO}" "${LATEST_SO}"
+cp "${TARGET_SO}" "${LATEST_SO}-${MODULE_VER}"
+echo ${MODULE_VER} > ""
+
+echo INSTALLED ${MODULE} ${MODULE_VER}
