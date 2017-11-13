@@ -71,6 +71,6 @@ MODULE_VER=${MODULE_VER_ARRAY[2]}
 cp "${TARGET_SO}" "${LATEST_SO}"
 cp "${TARGET_SO}" "${LATEST_SO}-${MODULE_VER}"
 echo ${MODULE_VER} > "${CACHED_VER_FILE}"
-echo 'extension="${MODULE}.so"' > ${CACHED_INI_FILE}
+echo "extension=${MODULE}.so" > ${CACHED_INI_FILE}
 
 echo INSTALLED ${MODULE} ${MODULE_VER}
