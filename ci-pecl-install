@@ -19,7 +19,7 @@ function getExtDir()
 
 function getPhpVersion()
 {
-    if command -v phpenv; then
+    if [[ $(command -v phpenv) ]]; then
         phpenv version-name
         return 0
     fi
@@ -31,7 +31,9 @@ function applyLatestCachedSo()
     echo FOUND ${LATEST_SO}
     echo NO NEED TO UPDATE ${MODULE}
     cp "${LATEST_SO}" "${TARGET_SO}"
-    exit 0
+    phpenv config-add "${CACHED_INI_FILE}"
+    phpenv rehash
+    php --ri ${MODULE}
 }
 
 PHP_VER=$(getPhpVersion)
@@ -40,11 +42,13 @@ TARGET_SO=${EXT_DIR}/${MODULE}.so
 CACHE_DIR=${HOME}/pecl_cache/${PHP_VER}
 LATEST_SO=${CACHE_DIR}/${MODULE}.so
 CACHED_VER_FILE=${CACHE_DIR}/${MODULE}.ver
+CACHED_INI_FILE=${CACHE_DIR}/${MODULE}.ini
 
 mkdir -p ${CACHE_DIR}
 
 if [[ ${SKIP_UPDATE} && -f ${LATEST_SO} ]]; then
     applyLatestCachedSo
+    exit 0
 fi
 
 REMOTE_MODULE_VER_ARRAY=( $(pecl remote-info ${MODULE} | grep 'Latest') )
@@ -54,6 +58,7 @@ if [[ -f ${CACHED_VER_FILE} ]]; then
     CACHED_VER=$(cat ${CACHED_VER_FILE})
     if [[ ${CACHED_VER} == ${REMOTE_MODULE_VER} ]]; then
         applyLatestCachedSo
+        exit 0
     fi
 fi
 
@@ -65,6 +70,7 @@ MODULE_VER_ARRAY=( $(pecl info ${MODULE} | grep 'Release Version') )
 MODULE_VER=${MODULE_VER_ARRAY[2]}
 cp "${TARGET_SO}" "${LATEST_SO}"
 cp "${TARGET_SO}" "${LATEST_SO}-${MODULE_VER}"
-echo ${MODULE_VER} > ""
+echo ${MODULE_VER} > "${CACHED_VER_FILE}"
+echo 'extension="${MODULE}.so"' > ${CACHED_INI_FILE}
 
 echo INSTALLED ${MODULE} ${MODULE_VER}
