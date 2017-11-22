@@ -24,16 +24,16 @@ cache:
 
 before_script:
   - pecl channel-update pecl.php.net
-  - bash ci-pecl-install swoole
+#  - bash ci-pecl-install swoole
 #  - pecl install swoole
 #  - printf "\n" | pecl install imagick
-#  - phpenv config-add php-ext.ini
+  - phpenv config-add php-ext.ini
   - composer update
 #  - pear install pear/PHP_CodeSniffer
   - phpenv rehash
 #  - php -i|grep include_path
 #  - ls -la --color /home/travis/.phpenv/versions/$(phpenv version-name)/share/pear
-  - php -i|grep -A5 redis
+  - php --ri redis
 
 script:
   - vendor/bin/phpcs --extensions=php ./
