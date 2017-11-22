@@ -30,7 +30,7 @@ before_script:
   - phpenv rehash
 #  - php -i|grep include_path
 #  - ls -la --color /home/travis/.phpenv/versions/$(phpenv version-name)/share/pear
-  - php --ri redis
+  - php -i|grep -A5 redis
 
 script:
   - vendor/bin/phpcs --extensions=php ./
